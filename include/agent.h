@@ -10,6 +10,6 @@ typedef struct {
 
 Agent* initAgent(Vector2 pos, float angle);
 void freeAgent(Agent* agent);
-void updateAgent(Agent* agent);
+void updateAgent(Agent* agent, Color* pixels);
 
 #endif

@@ -51,10 +51,14 @@ SetTextureFilter(bufferB.texture, TEXTURE_FILTER_POINT);
 					WHITE);
 
 			EndShaderMode();
+			Image frame = LoadImageFromTexture((useBufferA ? bufferB : bufferA).texture); // GPU → CPU
+			Color *pixels = LoadImageColors(frame);
 			for (int i = 0; i < AGENTCOUNT; i++) {
 				DrawPixel(agents[i]->position.x, agents[i]->position.y, WHITE);
-				updateAgent(agents[i]);
+				updateAgent(agents[i], pixels);
 			}
+			UnloadImageColors(pixels);
+			UnloadImage(frame);
 		EndTextureMode();
 
 		// Draw the current buffer to screen
@@ -75,6 +79,11 @@ SetTextureFilter(bufferB.texture, TEXTURE_FILTER_POINT);
 	UnloadRenderTexture(bufferA);
 	UnloadRenderTexture(bufferB);
 	CloseWindow();
+
+	for (int i = 0; i < AGENTCOUNT;i++) {
+		free(agents[i]);
+	}
+	free(agents);
 
 	return 0;
 }

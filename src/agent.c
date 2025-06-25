@@ -14,7 +14,22 @@ void freeAgent(Agent* agent) {
 	free(agent);
 }
 
-void updateAgent(Agent* agent) {
+int sense(Agent* agent, float direction, Color* pixels) {
+	int centerX = agent->position.x + 5*cos(agent->angle + direction);
+	int centerY = agent->position.y + 5*sin(agent->angle + direction);
+	int sum = 0;
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (!(centerY+j >= HEIGHT || centerY+j<0 || centerX+i >= WIDTH || centerX+i < 0)) {
+				Color sensed = pixels[(centerY + j) * WIDTH + centerX + i];
+				sum += sensed.r + sensed.g + sensed.b;
+			}
+		}
+	}
+	return sum;
+}
+
+void updateAgent(Agent* agent, Color* pixels) {
 	agent->position.x += cos(agent->angle);
 	agent->position.y += sin(agent->angle);
 	if (agent->position.x >= WIDTH) {
@@ -27,17 +42,15 @@ void updateAgent(Agent* agent) {
 	} else if (agent->position.y <= 0) {
 		agent->angle = (float)rand()/(float)RAND_MAX * PI;
 	}
+
+	int left = sense(agent, -PI/4, pixels);
+	int mid = sense(agent, 0, pixels);
+	int right = sense(agent, PI/4, pixels);
+
+	if (left > mid && left > right) {
+		agent->angle += PI/16;
+	} else if (right > mid && right > left) {
+		agent->angle -= PI/6;
+	}
 }
 
-int sense(Agent* agent, float direction, Color* pixels) {
-	int centerX = agent->position.x + 5*cos(agent->angle + direction);
-	int centerY = agent->position.y + 5*sin(agent->angle + direction);
-	for (int i = -1; i <= 1; i++) {
-		for (int j = -1; j <= 1; j++) {
-			if (!(centerY+j >= HEIGHT || centerY+j<0 || centerX+i >= WIDTH || centerX+i < 0)) {
-				Color sensed = pixels[(centerY + j) * WIDTH + centerX + i];
-			}
-		}
-	}
-	return 0;
-}
