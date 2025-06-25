@@ -1,0 +1,13 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-I",
+      "include/",
+      "src/main.c"
+    ],
+    "directory": "/home/kiandro/projects/Slimesim",
+    "file": "/home/kiandro/projects/Slimesim/src/main.c"
+  }
+]
