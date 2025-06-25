@@ -11,7 +11,19 @@ void main()
 {
     vec2 texel = 1.0 / resolution;
     vec4 sum = vec4(0.0);
-    sum = texture(texture0, fragTexCoord + texel * vec2( 0,  0));
+
+	sum += texture(texture0, fragTexCoord + texel * vec2(-1, -1)) * 0.025;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 0, -1)) * 0.10;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 1, -1)) * 0.025;
+
+    sum += texture(texture0, fragTexCoord + texel * vec2(-1,  0)) * 0.10;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 0,  0)) * 0.50;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 1,  0)) * 0.10;
+
+    sum += texture(texture0, fragTexCoord + texel * vec2(-1,  1)) * 0.025;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 0,  1)) * 0.10;
+    sum += texture(texture0, fragTexCoord + texel * vec2( 1,  1)) * 0.025;
+
 	sum.rgb -= vec3(0.005);
 
     sum.rgb = max(sum.rgb, 0.0);

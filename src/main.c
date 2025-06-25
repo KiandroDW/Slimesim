@@ -25,7 +25,8 @@ int main(void)
 
 	Agent** agents = malloc(AGENTCOUNT * sizeof(Agent));
 	for (int i = 0; i < AGENTCOUNT; i++) {
-		float dist = (float)rand()/(float)RAND_MAX * 150;
+		float dist = (float)rand()/(float)RAND_MAX * 300;
+		/* dist = 0; */
 		float angle = (float)rand()/(float)RAND_MAX * 2 * PI;
 		agents[i] = initAgent((Vector2) {400 + dist*cos(angle), 400 + dist*sin(angle)}, PI + angle);
 	}
@@ -59,7 +60,7 @@ int main(void)
 			Image frame = LoadImageFromTexture((useBufferA ? bufferB : bufferA).texture); // GPU → CPU
 			Color *pixels = LoadImageColors(frame);
 			for (int i = 0; i < AGENTCOUNT; i++) {
-				DrawPixel(agents[i]->position.x, agents[i]->position.y, WHITE);
+				DrawPixel(agents[i]->position.x, agents[i]->position.y, SKYBLUE);
 				updateAgent(agents[i], pixels);
 			}
 			UnloadImageColors(pixels);
