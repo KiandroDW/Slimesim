@@ -2,18 +2,20 @@
 #include "raylib.h"
 #include "consts.h"
 #include <stdlib.h>
+#include <time.h>
 
 int main(void)
 {
+	srand(time(NULL));
     InitWindow(WIDTH, HEIGHT, "Slime Diffusion Simulator");
     SetTargetFPS(60);
 
-RenderTexture2D bufferA = LoadRenderTexture(WIDTH, HEIGHT);
-RenderTexture2D bufferB = LoadRenderTexture(WIDTH, HEIGHT);
+	RenderTexture2D bufferA = LoadRenderTexture(WIDTH, HEIGHT);
+	RenderTexture2D bufferB = LoadRenderTexture(WIDTH, HEIGHT);
 
-// Set filtering for both
-SetTextureFilter(bufferA.texture, TEXTURE_FILTER_POINT);
-SetTextureFilter(bufferB.texture, TEXTURE_FILTER_POINT);
+	// Set filtering for both
+	SetTextureFilter(bufferA.texture, TEXTURE_FILTER_POINT);
+	SetTextureFilter(bufferB.texture, TEXTURE_FILTER_POINT);
 
     Shader diffusionShader = LoadShader(0, "shaders/diffusion.fs");
 
