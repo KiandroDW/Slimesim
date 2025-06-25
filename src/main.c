@@ -1,6 +1,7 @@
 #include "agent.h"
 #include "raylib.h"
 #include "consts.h"
+#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -24,7 +25,9 @@ int main(void)
 
 	Agent** agents = malloc(AGENTCOUNT * sizeof(Agent));
 	for (int i = 0; i < AGENTCOUNT; i++) {
-		agents[i] = initAgent((Vector2) {400, 400}, (float)rand()/(float)RAND_MAX * 2 * PI);
+		float dist = (float)rand()/(float)RAND_MAX * 150;
+		float angle = (float)rand()/(float)RAND_MAX * 2 * PI;
+		agents[i] = initAgent((Vector2) {400 + dist*cos(angle), 400 + dist*sin(angle)}, PI + angle);
 	}
 
 	bool useBufferA = true;

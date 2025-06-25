@@ -15,8 +15,8 @@ void freeAgent(Agent* agent) {
 }
 
 int sense(Agent* agent, float direction, Color* pixels) {
-	int centerX = agent->position.x + 5*cos(agent->angle + direction);
-	int centerY = agent->position.y + 5*sin(agent->angle + direction);
+	int centerX = agent->position.x + 3*cos(agent->angle + direction);
+	int centerY = agent->position.y + 3*sin(agent->angle + direction);
 	int sum = 0;
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
@@ -48,9 +48,9 @@ void updateAgent(Agent* agent, Color* pixels) {
 	int right = sense(agent, PI/4, pixels);
 
 	if (left > mid && left > right) {
-		agent->angle += PI/16;
+		agent->angle -= PI/4;
 	} else if (right > mid && right > left) {
-		agent->angle -= PI/6;
+		agent->angle += PI/4;
 	}
 }
 
