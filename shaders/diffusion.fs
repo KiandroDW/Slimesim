@@ -26,6 +26,9 @@ void main()
 
 	sum.rgb -= vec3(0.005);
 
+	if (sum.g > 0.3) {
+		sum.b += 0.01;
+	}
     sum.rgb = max(sum.rgb, 0.0);
 	finalColor = sum;
 }

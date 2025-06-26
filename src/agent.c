@@ -1,5 +1,5 @@
 #include "agent.h"
-#include "consts.h"
+#include "conf.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -15,13 +15,13 @@ void freeAgent(Agent* agent) {
 }
 
 int sense(Agent* agent, float direction, Color* pixels) {
-	int centerX = agent->position.x + 16*cos(agent->angle + direction);
-	int centerY = agent->position.y + 16*sin(agent->angle + direction);
+	int centerX = agent->position.x + senseDistance*cos(agent->angle + direction);
+	int centerY = agent->position.y + senseDistance*sin(agent->angle + direction);
 	int sum = 0;
-	for (int i = -1; i <= 1; i++) {
-		for (int j = -1; j <= 1; j++) {
-			if (!(centerY+j >= HEIGHT || centerY+j<0 || centerX+i >= WIDTH || centerX+i < 0)) {
-				Color sensed = pixels[(HEIGHT - 1 - (centerY + j)) * WIDTH + centerX + i];
+	for (int i = -senseRadius; i <= senseRadius; i++) {
+		for (int j = -senseRadius; j <= senseRadius; j++) {
+			if (!(centerY+j >= screenHeight || centerY+j<0 || centerX+i >= screenWidth || centerX+i < 0)) {
+				Color sensed = pixels[(screenHeight - 1 - (centerY + j)) * screenWidth + centerX + i];
 				sum += sensed.r + sensed.g + sensed.b;
 			}
 		}
@@ -30,37 +30,37 @@ int sense(Agent* agent, float direction, Color* pixels) {
 }
 
 void updateAgent(Agent* agent, Color* pixels) {
-	agent->position.x += cos(agent->angle);
-	agent->position.y += sin(agent->angle);
-	if (agent->position.x >= WIDTH) {
+	agent->position.x += speed*cos(agent->angle);
+	agent->position.y += speed*sin(agent->angle);
+	if (agent->position.x >= screenWidth) {
 		agent->angle = (float)rand()/(float)RAND_MAX * PI + PI / 2;
-		agent->position.x = WIDTH - 1;
+		agent->position.x = screenWidth - 1;
 	} else if (agent->position.x < 0) {
 		agent->angle = (float)rand()/(float)RAND_MAX * PI - PI / 2;
 		agent->position.x = 0;
 	}
-	if (agent->position.y >= HEIGHT) {
+	if (agent->position.y >= screenHeight) {
 		agent->angle = (float)rand()/(float)RAND_MAX * PI + PI;
-		agent->position.y = HEIGHT-1;
+		agent->position.y = screenHeight-1;
 	} else if (agent->position.y < 0) {
 		agent->angle = (float)rand()/(float)RAND_MAX * PI;
 		agent->position.y = 0;
 	}
 
-	int left = sense(agent, -PI/6, pixels);
+	int left = sense(agent, -senseAngle, pixels);
 	int mid = sense(agent, 0, pixels);
-	int right = sense(agent, PI/6, pixels);
+	int right = sense(agent, senseAngle, pixels);
 
 	if ((left > mid && left > right && left > 20)) {
-		agent->angle -= PI/16;
+		agent->angle -= randomTurnStrength ? (float)rand()/(float)RAND_MAX * maxTurnStrength : maxTurnStrength;
 	} else if ((right > mid && right > left && right > 20)) {
-		agent->angle += PI/16;
+		agent->angle += randomTurnStrength ? (float)rand()/(float)RAND_MAX * maxTurnStrength : maxTurnStrength;
 	}
 
-	float randomness = ((float)rand()/(float)RAND_MAX - 0.5) * PI/54;
+	float randomness = ((float)rand()/(float)RAND_MAX - 0.5) * randomAngleChange;
 	agent->angle += randomness;
 
-	if (rand() % 10000 == 0) { // 1 in 10000 chance for random direction
+	if (randomDirection && rand() % randomDirectionChance == 0) {
 		agent->angle = (float)rand()/(float)RAND_MAX * 2 * PI;
 	}
 }
